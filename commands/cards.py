@@ -27,6 +27,8 @@ class CardsCommand(Runner):
         id = data[0]
         balance = data[1]
         cards = database.get_cards(self.sender)
+        if not cards:
+            return "0 cards"
         if data is not None:
             a = [database.get_card_by_id(c) for c in cards]
             b = np.array(a)

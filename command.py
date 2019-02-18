@@ -61,9 +61,8 @@ async def on_message(message):
             else:
                 text = a
                 embed = None
-            if text is None:
-                text = ""
-            text += "\n `A possible database wipe might happen, you have been warned!`"
+            #if text is None:
+            #    text = ""
             a = await client.send_message(destination=message.channel, content=text, embed=embed)
         except Exception:
             print(f"Exception!")

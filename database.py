@@ -14,6 +14,13 @@ connect = sqlite3.connect("sql.db")
 c = connect.cursor()
 
 valid_types = ["common", "uncommon", "rare", "mythic", "legendary", "iconic"]
+money = {
+    "common": 1,
+    "uncommon": 7,
+    "rare": 12,
+    "mythic": 18,
+    "iconic": 26
+}
 packs = {
     "wood": {
         "cost": 25,
@@ -55,6 +62,7 @@ def create_table():
     c.execute("CREATE TABLE IF NOT EXISTS cards(indexer INTEGER PRIMARY KEY, name TEXT, typeo TEXT, class TEXT);")
     import_cards()
     c.execute("CREATE TABLE IF NOT EXISTS users(primary_key INTEGER PRIMARY KEY, balance INTEGER, card_ids BLOB);")
+    #c.execute("DELETE FROM users WHERE primary_key = 223212153207783435;")
     connect.commit()
 
 
@@ -146,6 +154,19 @@ def add_card(user, card_id):
         return False
 
 
+def sell_card(user, card_id: int):
+    if get_user(user.id) is not None or get_card_by_id(card_id) is not None:
+        cards = get_cards(user)
+        print(cards)
+        print(type(cards[0]))
+        cards.remove(card_id)
+        c.execute("UPDATE users SET card_ids= ? WHERE primary_key=?;", (json.dumps(cards), user.id))
+        connect.commit()
+        return True
+    else:
+        return False
+
+
 def add_cards(user, card_ids):
     id = get_user(user.id)
     card = get_card_by_id(card_ids[0])
@@ -171,6 +192,17 @@ def get_card_by_id(card_id):
     return result
 
 
+def get_card_by_ids(card_ids):
+    print(type(card_ids))
+    a = []
+    for cc in card_ids:
+        print(cc)
+        c.execute("SELECT * FROM cards WHERE indexer = ?;", (cc, ))
+        a.append(c.fetchone())
+    df = pd.DataFrame(a, columns=["row", "indexer", "name", "typeo", "class"]).sort_values(["typeo"])
+    return df["indexer"].tolist()
+
+
 def all_cards(page: int, limit: int = 10, type_: str = "*"):
     if limit == -1:
         limit = count_all_cards()
@@ -186,18 +218,28 @@ def count_all_cards() -> int:
     return c.fetchone()[0]
 
 
+def get_card(name: str) -> int:
+    c.execute("SELECT indexer FROM CARDS WHERE name = ? LIMIT 1;", (name, ))
+    return c.fetchone()[0]
+
+
 def get_cards(user):
     if get_user(user.id) is not None:
         c.execute("SELECT card_ids "
                   "FROM users "
                   "WHERE primary_key=?;", (user.id, ))
         cards = c.fetchone()
+        print(cards)
         cards = ast.literal_eval(cards[0])
         if not cards:
             cards = []
         # else:
         #   cardss = [get_card_by_id(int(c)) for c in cards]
-        return cards
+        print(cards)
+        cards = [int(k) for k in cards]
+        a = get_card_by_ids(cards)
+        print(a)
+        return a
     else:
         print(f"This user {user.name} has not initialized")
         return False

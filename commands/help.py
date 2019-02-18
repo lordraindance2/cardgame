@@ -24,7 +24,8 @@ class HelpCommand(Runner):
              "!cardslist - Find out the total list of cards!",
              "!help - This command!",
              "!pay - Pay someone of your choice an amount of money!",
-             "!prefix - Change the server prefix or view the current"]
+             "!prefix - Change the server prefix or view the current",
+             "!sell - Sell a card for money"]
 
         embed.add_field(name="Commands", value="\n".join(a), inline=False)
         return None, embed

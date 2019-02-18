@@ -8,6 +8,6 @@ from .buy import BuyCommand
 from .prefix import PrefixCommand
 from .give import GiveCommand
 from .help import HelpCommand
-
+from .sell import SellCommand
 name = "commands"
 __all__ = ["start", "cards", "balance", "add", "cardslist"]
