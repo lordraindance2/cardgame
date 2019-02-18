@@ -1,9 +1,10 @@
 aiohttp==1.0.5
 async-timeout==3.0.1
+boto==2.49.0
 certifi==2018.11.29
 cffi==1.12.0
 chardet==3.0.4
-git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py[voice]
+discord.py==0.16.12
 mkl-fft==1.0.10
 mkl-random==1.0.2
 multidict==4.5.2
