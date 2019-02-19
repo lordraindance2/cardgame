@@ -21,15 +21,30 @@ class SellCommand(Runner):
         else:
             return f"requires 1 or 2 arguments"
         name = self.args[0]
-        card_id = database.get_card(name)
-        card = database.get_card_by_id(card_id)
-        print(card)
-        count = database.sell_card(self.sender, card_id, count)
-        if card[3].lower() not in database.money.keys():
-            balance = random.random() * 500 + 500
+        if name == "ALL":
+            cards = database.get_cards(self.sender)
+            b = 0
+            for card_id in cards:
+                count = database.sell_card(self.sender, card_id)
+                if count != 0:
+                    card = database.get_card_by_id(card_id)
+                    if card[3].lower() not in database.money.keys():
+                        balance = int(random.random() * 500 + 500)
+                    else:
+                        balance = database.money[card[3].lower()]
+                    b += balance
+            if database.add_balance(self.sender, b):
+                return f"You sold everything for {b} money"
         else:
-            balance = database.money[card[3].lower()]
-        balance *= count
-        if count and database.add_balance(self.sender, balance):
-            return f"You removed {count} {self.args[0]} for {balance} money"
+            card_id = database.get_card(name)
+            card = database.get_card_by_id(card_id)
+            print(card)
+            count = database.sell_card(self.sender, card_id, count)
+            if card[3].lower() not in database.money.keys():
+                balance = int(random.random() * 500 + 500)
+            else:
+                balance = database.money[card[3].lower()]
+            balance *= count
+            if count and database.add_balance(self.sender, balance):
+                return f"You removed {count} {self.args[0]} for {balance} money"
 

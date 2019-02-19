@@ -10,7 +10,7 @@ class Runner:
         self.__args = args
 
     def do(self):
-        return f"Running command: {self.name}"
+        return f"{self.sender.name} runs command: {self.name} with {self.args}"
 
     @property
     def name(self):

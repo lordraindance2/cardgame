@@ -18,6 +18,7 @@ money = {
     "common": 4,
     "uncommon": 11,
     "rare": 16,
+    "legendary": 19,
     "mythic": 22,
     "iconic": 35
 
@@ -164,7 +165,7 @@ def add_card(user, card_id):
         return False
 
 
-def sell_card(user, card_id: int, count: int):
+def sell_card(user, card_id: int, count: int = 1):
     if get_user(user.id) is not None or get_card_by_id(card_id) is not None:
         cards = get_cards(user)
         print(cards)
@@ -172,6 +173,8 @@ def sell_card(user, card_id: int, count: int):
         a = dict(Counter(cards))
         if count > a[card_id]:
             count = a[card_id] - 1
+        if count == 0:
+            count += 1
         for i in range(count):
             cards.remove(card_id)
         c.execute("UPDATE users SET card_ids= ? WHERE primary_key=?;", (json.dumps(cards), user.id))
@@ -218,7 +221,7 @@ def get_card_by_ids(card_ids):
 
 
 def all_cards(page: int, limit: int = 10, type_: str = "*"):
-    if limit == -1:
+    if limit == -1 and type_ == "*":
         limit = count_all_cards()
         c.execute("SELECT * FROM cards")
     elif type_ == "*":
@@ -282,9 +285,11 @@ def buy_pack(user, pack: str, count: int):
                 probability = packs[pack]["rarity"][valid_type]
                 if guesser >= probability:
                     last = valid_type
-            print(f"{guesser} - {last}")
-            possible = all_cards(0, -1, last.capitalize())
-            a.append(possible[random.randint(0, len(possible)-1)])
+
+            possible = all_cards(1, -1, last.capitalize())
+            prize = possible[random.randint(0, len(possible)-1)]
+            a.append(prize)
+            print(f"{pack} {guesser} - {last} - {prize}")
         d = np.array(a)
         add_card(user, d[:, 1].tolist())
         return a

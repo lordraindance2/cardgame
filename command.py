@@ -11,7 +11,7 @@ from commands import CardslistCommand
 import os
 from boto.s3.connection import S3Connection
 
-s3 = S3Connection("STUPIDHASH", "TOTALLYSECURE")
+#s3 = S3Connection("STUPIDHASH", "TOTALLYSECURE")
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
@@ -48,12 +48,12 @@ async def on_message(message):
         else:
             user_time_dict[message.author.id] = datetime.datetime.utcnow()
     if msg.startswith(get_prefix(hash(message.server))):
-        _command = msg.split(" ")[0]
+        _command = msg.split(" ")[0].lower()
         args = re.sub(" +", " ", msg).split(" ")[1:]
         # clean_command = re.sub(get_prefix(hash(message.server)), "", _command)
         clean_command = _command[(len(get_prefix(hash(message.server)))):]
         try:
-            print(f"{clean_command.capitalize()}Command")
+            print(f"{message.author.name} runs {clean_command.capitalize()}Command")
             mod = __import__("commands", fromlist=[f"{clean_command.capitalize()}Command"])
             comm = getattr(mod, f"{clean_command.capitalize()}Command")
             b = comm(client, message, message.author, args)
@@ -85,5 +85,5 @@ async def on_message(message):
     elif message.content.startswith('!hello'):
         await client.send_message(message.channel, f"{message.channel.name}")
     """
-
-client.run("NDc1MzY2NTA5MTQ1ODgyNjI1.D0eApw.a3sD2AXnbrJ8ifW4gsdKyZmSXq0")
+print(os.environ["CARD_GAME_BOT_TOKEN"])
+client.run(os.environ["CARD_GAME_BOT_TOKEN"])
