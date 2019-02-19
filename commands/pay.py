@@ -20,6 +20,8 @@ class PayCommand(Runner):
             if user is self.sender:
                 return "sad lawl trying to pay yourself (didn't work)"
             pay_amount = int(self.args[1])
+            if pay_amount < 0:
+                return ":thinking:"
             if database.get_balance(self.sender) - pay_amount < 0:
                 return "not allowed to give yourself debt"
             if database.add_balance(self.sender, -pay_amount) and database.add_balance(user, pay_amount):

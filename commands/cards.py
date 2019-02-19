@@ -33,6 +33,8 @@ class CardsCommand(Runner):
             a = [database.get_card_by_id(c) for c in cards]
             b = np.array(a)
             pages = int(len(b) / 10)
+            if len(b) % 10 == 0:
+                pages = pages - 1
             offset = page * 11
             b = b[offset:offset + 10]
             a = [f"{util.escape_underscore(s[0])} :: {s[1]} :: {s[2]}" for s in b[:, 2:]]
@@ -41,8 +43,10 @@ class CardsCommand(Runner):
             embed = discord.Embed(descrption=f"{self.sender.name}: List of Cards", color=discord.Color.red())
             # change the values so they work in discord.py
             embed.set_author(name=self.sender.name, icon_url=self.sender.avatar_url)
-            embed.add_field(name="Current Balance:", value=balance, inline=False)
+            soon_to_be_list_of_cards = database.count_user_cards(self.sender, "all")
+            embed.add_field(name=f"Card Count: {soon_to_be_list_of_cards}", value=balance, inline=False)
             embed.add_field(name="Cards", value=output, inline=False)
+
             embed.set_footer(text=f"Showing page {page + 1} of {pages + 1}")
             return None, embed
         else:

@@ -8,7 +8,7 @@ class GiveCommand(Runner):
 
     def __init__(self, client, message, sender, args):
         super().__init__(client, message, sender, args)
-        self.name = "add_command"
+        self.name = "give_command"
 
     def do(self):
         super().do()

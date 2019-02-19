@@ -25,7 +25,8 @@ class BuyCommand(Runner):
             elif database.get_balance(self.sender) - database.packs[self.args[0]]["cost"] < 0:
                 return "please do not put yourself in debt"
             else:
-                pack = database.buy_pack(self.sender, self.args[0])
+                count = database.packs[self.args[0]]["count"]
+                pack = database.buy_pack(self.sender, self.args[0], count)
                 if pack:
                     embed = discord.Embed(title=f"{(self.args[0]).capitalize()}: Discovery", color=discord.Color.green())
                     # change the values so they work in discord.py

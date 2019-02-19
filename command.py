@@ -11,7 +11,7 @@ from commands import CardslistCommand
 import os
 from boto.s3.connection import S3Connection
 
-s3 = S3Connection(os.environ['S3_KEY'], os.environ['S3_SECRET'])
+s3 = S3Connection("STUPIDHASH", "TOTALLYSECURE")
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
@@ -86,4 +86,4 @@ async def on_message(message):
         await client.send_message(message.channel, f"{message.channel.name}")
     """
 
-client.run(os.environ['bot_token'])
+client.run("NDc1MzY2NTA5MTQ1ODgyNjI1.D0eApw.a3sD2AXnbrJ8ifW4gsdKyZmSXq0")
