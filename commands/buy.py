@@ -9,8 +9,8 @@ import util
 
 class BuyCommand(Runner):
 
-    def __init__(self,client,  message, sender, args):
-        super().__init__(client, message, sender, args)
+    def __init__(self, client, server, message, sender, args):
+        super().__init__(client, server, message, sender, args)
         self.name = "buy_command"
 
     def do(self):

@@ -1,14 +1,11 @@
 from .runner import Runner
 import database
-import discord
-import json
-from numbers import Number
 
 
 class PayCommand(Runner):
 
-    def __init__(self, client,  message, sender, args):
-        super().__init__(client, message, sender, args)
+    def __init__(self, client, server, message, sender, args):
+        super().__init__(client, server, message, sender, args)
         self.name = "pay_command"
 
     def do(self):

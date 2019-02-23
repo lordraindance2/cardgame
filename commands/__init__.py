@@ -10,6 +10,6 @@ from .give import GiveCommand
 from .help import HelpCommand
 from .sell import SellCommand
 from .gamble import GambleCommand
-
+from .auction import AuctionCommand
 name = "commands"
 __all__ = ["start", "cards", "balance", "add", "cardslist"]

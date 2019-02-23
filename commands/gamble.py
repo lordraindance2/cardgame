@@ -6,8 +6,8 @@ import discord
 
 class GambleCommand(Runner):
 
-    def __init__(self, client, message, sender, args):
-        super().__init__(client, message, sender, args)
+    def __init__(self, client, server, message, sender, args):
+        super().__init__(client, server, message, sender, args)
         self.name = "gamble_command"
 
     def do(self):
@@ -16,14 +16,9 @@ class GambleCommand(Runner):
             cards = database.all_cards(1, -1)
             a = random.random()
             possible = int(a * (len(cards) - 1))
-
-            print(cards)
-            print(a)
-            print(len(cards))
-            print("hello21321313")
-            print(possible)
             if database.get_balance(self.sender) - 1000 < 0:
                 return "You do not have enough money to partake in your gamble"
+            print(f"{a} {possible}")
             if database.add_balance(self.sender, - 1000) and database.add_card(self.sender, possible):
                 embed = discord.Embed(descrption=f"{self.sender.name}: Gamble",
                                       color=discord.Color.dark_gold())

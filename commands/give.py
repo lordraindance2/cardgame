@@ -6,8 +6,8 @@ from numbers import Number
 
 class GiveCommand(Runner):
 
-    def __init__(self, client, message, sender, args):
-        super().__init__(client, message, sender, args)
+    def __init__(self, client, server, message, sender, args):
+        super().__init__(client, server, message, sender, args)
         self.name = "give_command"
 
     def do(self):

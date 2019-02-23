@@ -6,7 +6,6 @@ import re
 import importlib
 import datetime
 import random
-from config import get_prefix, prefix
 from commands import CardslistCommand
 import os
 from boto.s3.connection import S3Connection
@@ -18,7 +17,7 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
-game = discord.Game(name="!help - RainDance🌧#4115 for help/other", url="https://www.twitch.tv/lordraindance")
+game = discord.Game(name="$help - RainDance🌧#4115 for help/other", url="https://www.twitch.tv/lordraindance")
 client = discord.Client()
 
 user_time_dict = {}
@@ -34,29 +33,40 @@ async def on_ready():
     print(str(database.connect))
     print("hello")
     print(database.show_table())
+    a = await client.get_user_info('223212153207783435')
+    print(a)
     await client.change_presence(game=game)
 
 
 @client.event
 async def on_message(message):
     msg = message.content.strip()
-    if database.get_user(message.author.id) is not None:
-        if message.author.id in user_time_dict.keys():
-            if datetime.datetime.utcnow() - user_time_dict[message.author.id] > datetime.timedelta(minutes=1):
-                database.add_balance(message.author, int(random.uniform(9, 15)))
+    if not message.author.bot:
+        if database.get_user(message.author.id) is not None:
+            if message.author.id in user_time_dict.keys():
+                if datetime.datetime.utcnow() - user_time_dict[message.author.id] > datetime.timedelta(minutes=1):
+                    database.add_balance(message.author, int(random.uniform(9, 15)))
+                    user_time_dict[message.author.id] = datetime.datetime.utcnow()
+            else:
                 user_time_dict[message.author.id] = datetime.datetime.utcnow()
         else:
-            user_time_dict[message.author.id] = datetime.datetime.utcnow()
-    if msg.startswith(get_prefix(hash(message.server))):
+            database.init_user(message.author)
+    server_id = int(message.server.id)
+    if msg.startswith(database.get_prefix(server_id)):
         _command = msg.split(" ")[0].lower()
         args = re.sub(" +", " ", msg).split(" ")[1:]
         # clean_command = re.sub(get_prefix(hash(message.server)), "", _command)
-        clean_command = _command[(len(get_prefix(hash(message.server)))):]
+        prefix = database.get_prefix(server_id)
+        clean_command = _command[(len(prefix)):]
+        for k in database.command_alias:
+            if clean_command in k[0]:
+                clean_command = k[1]
+                break
         try:
-            print(f"{message.author.name} runs {clean_command.capitalize()}Command")
+            print(f"{message.author.name} runs {clean_command.capitalize()}Command with {args}")
             mod = __import__("commands", fromlist=[f"{clean_command.capitalize()}Command"])
             comm = getattr(mod, f"{clean_command.capitalize()}Command")
-            b = comm(client, message, message.author, args)
+            b = comm(client, message.server, message, message.author, args)
             a = b.do()
             if isinstance(a, tuple):
                 text, embed = a

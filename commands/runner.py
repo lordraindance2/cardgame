@@ -1,10 +1,11 @@
 
 class Runner:
 
-    def __init__(self, client,  message, sender, args):
+    def __init__(self, client, server, message, sender, args):
 
         self.__name = "base_command"
         self.__client = client
+        self.__server = server
         self.__sender = sender
         self.__message = message
         self.__args = args
@@ -24,6 +25,9 @@ class Runner:
     def client(self):
         return self.__client
 
+    @property
+    def server(self):
+        return self.__server
     @property
     def message(self):
         return self.__message

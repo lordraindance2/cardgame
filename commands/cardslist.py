@@ -5,10 +5,11 @@ import numpy as np
 import util
 import discord
 
+
 class CardsListCommand(Runner):
 
-    def __init__(self,client,  message, sender, args):
-        super().__init__(client, message, sender, args)
+    def __init__(self, client, server, message, sender, args):
+        super().__init__(client, server, message, sender, args)
         self.name = "cardslist_command"
 
     def do(self):
@@ -22,12 +23,11 @@ class CardsListCommand(Runner):
             except ValueError:
                 return f"{self.args[0]} is not a page number", None
         elif len(self.args) == 0:
-            page = 1
+            page = 0
         else:
             return f"command {self.name} has too many arguments ( {self.args})"
         result = database.all_cards(page=page)
-        print(result)
         cleaned_results = [f"{util.escape_underscore(r[2])} :: {r[3]} :: {r[4]}" for r in result]
         embed.add_field(name="Cards", value="\n".join(cleaned_results), inline=False)
-        embed.set_footer(text=f"Showing page {page} of {int(database.count_all_cards() / 10)}")
+        embed.set_footer(text=f"Showing page {page + 1} of {int(database.count_all_cards() / 10)}")
         return None, embed
