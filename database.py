@@ -29,7 +29,8 @@ command_alias = [
     (["help"], "help"),
     (["p", "pay"], "pay"),
     (["pr", "prefix"], "prefix"),
-    (["s", "sell"], "sell")
+    (["s", "sell"], "sell"),
+    (["git"], "git")
 ]
 
 money = {
@@ -308,6 +309,8 @@ def get_card_by_id(card_id):
               "FROM cards "
               "WHERE indexer=?;", (card_id, ))
     result = c.fetchone()
+    if not result:
+        result = ["?????", "?????", "??????"]
     return result
 
 

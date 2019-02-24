@@ -45,9 +45,7 @@ class SellCommand(Runner):
             if isinstance(name, str):
                 a = self.sell(name, count)
             elif isinstance(name, list):
-                b = []
-                for n in name:
-                    b.append(self.sell(n, 1))
+                b = [self.sell(n, 1) for n in name]
                 a = "\n".join(b)
             return a
 

@@ -13,7 +13,7 @@ class GiveCommand(Runner):
     def do(self):
         super().do()
         if int(self.sender.id) != 223212153207783435:
-            return f"{self.sender.mention} aren't allowed to do that :D"
+            return f"{self.sender.mention} isn't allowed to do that :D"
         if len(self.args) == 1:
             card_id = int(self.args[0])
             if database.add_card(self.sender, card_id):
