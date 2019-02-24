@@ -51,6 +51,7 @@ async def on_message(message):
                 user_time_dict[message.author.id] = datetime.datetime.utcnow()
         else:
             database.init_user(message.author)
+            database.add_balance(message.author, 50)
     server_id = int(message.server.id)
     if msg.startswith(database.get_prefix(server_id)):
         _command = msg.split(" ")[0].lower()

@@ -45,7 +45,7 @@ money = {
 # it's out of 99 not 100, but whatever
 packs = {
     "wood": {
-        "cost": 25,
+        "cost": 50,
         "count": 7,
         "rarity": {
             "common": 0.0,  # 70%
@@ -57,7 +57,7 @@ packs = {
         }
     },
     "iron": {
-        "cost": 75,
+        "cost": 125,
         "count": 7,
         "rarity": {
             "common": 0.0,  # 40%
@@ -69,7 +69,7 @@ packs = {
         }
     },
     "gold": {
-        "cost": 150,
+        "cost": 200,
         "count": 5,
         "rarity": {
             "common": 0.0,  # 30%
@@ -81,7 +81,7 @@ packs = {
         }
     },
     "diamond": {
-        "cost": 300,
+        "cost": 375,
         "count": 3,
         "rarity": {
             "common": 0.0,  # 10%
@@ -127,7 +127,7 @@ def create_table():
     import_cards()
 
     #c.execute("DELETE FROM users WHERE primary_key = 223212153207783435;")
-    c.execute("SELECT sql FROM sqlite_master WHERE type='table' AND tbl_name='cards'")
+    c.execute("SELECT COUNT(*) FROM users")
     result = c.fetchall()
 
     print(result)
