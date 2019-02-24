@@ -13,7 +13,9 @@ class SellCommand(Runner):
         super().do()
         _isList = False
         count = 1
-        if len(self.args) == 2:
+        if len(self.args) > 2:
+            _isList = True
+        elif len(self.args) == 2:
             try:
                 count = int(self.args[1])
             except ValueError:
