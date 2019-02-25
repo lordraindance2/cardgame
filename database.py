@@ -83,7 +83,7 @@ packs = {
     },
     "diamond": {
         "cost": 375,
-        "count": 3,
+        "count": 5,
         "rarity": {
             "common": 0.0,  # 10%
             "uncommon": 0.1,  # 30%
@@ -338,7 +338,9 @@ def all_cards(page: int, limit: int = 10, type_: str = "*"):
         c.execute("SELECT * FROM cards LIMIT ? OFFSET ?;", (limit, limit * page,))
     else:
         c.execute("SELECT * FROM cards WHERE typeo=? LIMIT ?, ?;", (type_, page, limit,))
-    return c.fetchall()
+    result = c.fetchall()
+    print(result, len(result))
+    return result
 
 
 def count_user_cards(user, rarity: str = "all"):
@@ -441,4 +443,4 @@ def remove_auction(auction_id: int):
 
 def check_auction(auction_id: int) -> bool:
     c.execute("SELECT * FROM auctions WHERE primary_key = ?", (auction_id, ))
-    return len(c.fetchone()) > 0
+    return len(c.fetchone()) > -1
