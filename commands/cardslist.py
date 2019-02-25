@@ -14,12 +14,14 @@ class CardsListCommand(Runner):
 
     def do(self):
         super().do()
+        if int(self.sender.id) != 223212153207783435:
+            pass
         embed = discord.Embed(descrption="List of Cards", color=discord.Color.dark_blue())
         # change the values so they work in discord.py
         embed.set_author(name=self.sender.name, icon_url=self.client.user.avatar_url)
         if len(self.args) == 1:
             try:
-                page = int(self.args[0])
+                page = int(self.args[0]) - 1
             except ValueError:
                 return f"{self.args[0]} is not a page number", None
         elif len(self.args) == 0:
@@ -29,5 +31,6 @@ class CardsListCommand(Runner):
         result = database.all_cards(page=page)
         cleaned_results = [f"{util.escape_underscore(r[2])} :: {r[3]} :: {r[4]}" for r in result]
         embed.add_field(name="Cards", value="\n".join(cleaned_results), inline=False)
-        embed.set_footer(text=f"Showing page {page + 1} of {int(database.count_all_cards() / 10)}")
+        max_pages = int(np.ceil(database.count_all_cards() / 10))
+        embed.set_footer(text=f"Showing page {page + 1} of {max_pages - 1}")
         return None, embed

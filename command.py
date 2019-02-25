@@ -53,6 +53,8 @@ async def on_message(message):
             database.init_user(message.author)
             database.add_balance(message.author, 50)
     server_id = int(message.server.id)
+    if message.server.id == 542778736857317386 and message.id not in [542783664023535616]:
+        pass
     if msg.startswith(database.get_prefix(server_id)):
         _command = msg.split(" ")[0].lower()
         args = re.sub(" +", " ", msg).split(" ")[1:]

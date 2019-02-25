@@ -278,8 +278,9 @@ def sell_card(user, card_id: int, count: int = 1):
             count = a[card_id] - 1
         if count == 0:
             count += 1
+        remove = cards.remove
         for i in range(count):
-            cards.remove(card_id)
+            remove(card_id)
         c.execute("UPDATE users SET card_ids= ? WHERE primary_key=?;", (json.dumps(cards), user.id))
         connect.commit()
         return count
@@ -318,11 +319,7 @@ def get_card_by_ids(card_ids):
     c.execute(f"SELECT * FROM cards WHERE indexer in ({', '.join('?' for _ in card_ids)})", card_ids)
     a = c.fetchall()
     dictionary = dict(Counter(card_ids))
-    b = []
-    for k in a:
-        if dictionary[k[1]] > 1:
-            for i in range(dictionary[k[1]] - 1):
-                b.append(k)
+    b = [k for k in a if dictionary[k[1]] for i in range(dictionary[k[1]] - 1)]
     a.extend(b)
     return a
 
@@ -390,6 +387,7 @@ def buy_pack(user, pack: str, count: int):
         add_balance(user, -packs[pack]["cost"])
         temp = valid_types
         a = []
+        append = a.append
         for i in range(count):
             guesser = random.random()
             last = ""
@@ -397,10 +395,11 @@ def buy_pack(user, pack: str, count: int):
                 probability = packs[pack]["rarity"][valid_type]
                 if guesser >= probability:
                     last = valid_type
-
+                else:
+                    break
             possible = all_cards(1, -1, last.capitalize())
             prize = possible[random.randint(0, len(possible)-1)]
-            a.append(prize)
+            append(prize)
             print(f"{pack} {guesser} - {last} - {prize}")
         d = np.array(a)
         add_card(user, d[:, 1].tolist())

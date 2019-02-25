@@ -18,18 +18,18 @@ class HelpCommand(Runner):
         embed.set_author(name="by RainDance", icon_url="https://poketouch.files.wordpress.com/2016/08/freeze_pokemon_articuno.png?w=648")
 
         a = ["Until I get a reliable host that's not my computer, this will shut down at random moments, so RIP",
-             "!start - Do this to start your card game adventure!",
-             "!auction, !a, !auc - Auction a card for sale!",
-             "!balance, !bal - Check your money!",
-             "!buy - Buy a pack, run '!buy' for more details!",
-             "!cards, !c - Find out your list of cards!",
-             "!cardslist, !clist - Find out the total list of cards!",
-             "!help - This command!",
-             "!pay, !p - Pay someone of your choice an amount of money!",
-             "!prefix, !pr - Change the server prefix or view the current",
-             "!sell, !s - Sell a card for money",
+             "!start - Do this to start your card game adventure.",
+             "!auction, !a, !auc - Auction a card for sale.",
+             "!balance, !bal - Check your money.",
+             "!buy - Buy a pack, run '!buy' for more details.",
+             "!cards, !c - Find out your list of cards.",
+             "!cardslist, !clist - Find out the total list of cards.",
+             "!help - This command.",
+             "!pay, !p - Pay someone of your choice an amount of money.",
+             "!prefix, !pr - Change the server prefix or view the current.",
+             "!sell, !s - Sell a card for money.",
              "!gamble, !g - Gamble an amount of money to have a"
-             " chance to get a card not defined by traditional rarities", ]
-
-        embed.add_field(name="Commands", value="\n".join(a), inline=False)
+             " chance to get a card not defined by traditional rarities.", ]
+        print(f"PREFIX: {database.get_prefix(self.server.id)}")
+        embed.add_field(name="Commands", value=(("\n".join(a)).replace("!", database.get_prefix(self.server.id)).replace(".", "!")), inline=False)
         return None, embed
