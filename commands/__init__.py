@@ -12,6 +12,6 @@ from .sell import SellCommand
 from .gamble import GambleCommand
 from .auction import AuctionCommand
 from .git import GitCommand
-
+from .sql import SqlCommand
 name = "commands"
 __all__ = ["start", "cards", "balance", "add", "cardslist"]

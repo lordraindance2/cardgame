@@ -29,7 +29,7 @@ class CardsListCommand(Runner):
         else:
             return f"command {self.name} has too many arguments ( {self.args})"
         result = database.all_cards(page=page)
-        cleaned_results = [f"{util.escape_underscore(r[2])} :: {r[3]} :: {r[4]}" for r in result]
+        cleaned_results = [f"{util.escape_underscore(r[1])} :: {r[2]} :: {r[3]}" for r in result]
         embed.add_field(name="Cards", value="\n".join(cleaned_results), inline=False)
         max_pages = int(np.ceil(database.count_all_cards() / 10))
         embed.set_footer(text=f"Showing page {page + 1} of {max_pages - 1}")

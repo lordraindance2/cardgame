@@ -30,7 +30,8 @@ command_alias = [
     (["p", "pay"], "pay"),
     (["pr", "prefix"], "prefix"),
     (["s", "sell"], "sell"),
-    (["git"], "git")
+    (["git"], "git"),
+    (["sql"], "sql")
 ]
 
 money = {
@@ -101,7 +102,6 @@ def create_table():
     connect.commit()
     c.executescript(f"""
         CREATE TABLE IF NOT EXISTS cards(
-            indexer INTEGER PRIMARY KEY, 
             name TEXT UNIQUE, 
             typeo TEXT, 
             class TEXT
@@ -159,7 +159,6 @@ def set_prefix(server_id: int, value: str):
 
 def import_cards():
     cards_csv = pd.read_csv("cards.csv")
-    cards_csv.insert(0, "indexer", range(0, len(cards_csv)))
     cards_csv.to_sql("cards", connect, if_exists="replace")
 
 
@@ -308,7 +307,7 @@ def add_cards(user, card_ids):
 def get_card_by_id(card_id):
     c.execute("SELECT * "
               "FROM cards "
-              "WHERE indexer=?;", (card_id, ))
+              "WHERE `index`=?;", (card_id, ))
     result = c.fetchone()
     if not result:
         result = ["?????", "?????", "??????"]
@@ -316,18 +315,18 @@ def get_card_by_id(card_id):
 
 
 def get_card_by_ids(card_ids):
-    c.execute(f"SELECT * FROM cards WHERE indexer in ({', '.join('?' for _ in card_ids)})", card_ids)
+    c.execute(f"SELECT * FROM cards WHERE `index` in ({', '.join('?' for _ in card_ids)})", card_ids)
     a = c.fetchall()
     dictionary = dict(Counter(card_ids))
-    b = [k for k in a if dictionary[k[1]] for i in range(dictionary[k[1]] - 1)]
+    b = [k for k in a if dictionary[k[0]] for i in range(dictionary[k[0]] - 1)]
     a.extend(b)
     return a
 
 
 def order_card_ids(card_ids):
     a = get_card_by_ids(card_ids)
-    df = pd.DataFrame(a, columns=["row", "indexer", "name", "typeo", "class"]).sort_values(["typeo"])
-    return df["indexer"].tolist()
+    df = pd.DataFrame(a, columns=["index", "name", "typeo", "class"]).sort_values(["typeo"])
+    return df["index"].tolist()
 
 
 def all_cards(page: int, limit: int = 10, type_: str = "*"):
@@ -356,7 +355,7 @@ def count_all_cards() -> int:
 
 
 def get_card(name: str) -> int:
-    c.execute("SELECT indexer FROM CARDS WHERE LOWER(name) = LOWER(?) LIMIT 1;", (name, ))
+    c.execute("SELECT `index` FROM CARDS WHERE LOWER(name) = LOWER(?) LIMIT 1;", (name, ))
     return c.fetchone()[0]
 
 

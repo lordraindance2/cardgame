@@ -49,9 +49,11 @@ class CardsCommand(Runner):
             max_pages = int(np.ceil(len(sorted_cards) / 10))
             print(max_pages)
             page -= 1
+            if page > max_pages:
+                return f"That page number is way too large, your max page count is {max_pages}"
             offset = page * 10
             b = sorted_cards[offset:offset + 9]
-            a = [f"{util.escape_underscore(s[0])} :: {s[1]} :: {s[2]} x{s[3]}" for s in b[:, 2:]]
+            a = [f"{util.escape_underscore(s[0])} :: {s[1]} :: {s[2]} x{s[3]}" for s in b[:, 1:]]
             output = "\n".join(a)
 
             embed = discord.Embed(descrption=f"{self.sender.name}: List of Cards", color=discord.Color.red())

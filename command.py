@@ -10,7 +10,7 @@ from commands import CardslistCommand
 import os
 from boto.s3.connection import S3Connection
 
-#s3 = S3Connection("STUPIDHASH", "TOTALLYSECURE")
+# s3 = S3Connection("STUPIDHASH", "TOTALLYSECURE")
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
@@ -40,6 +40,8 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    if not message.server:
+        return "Please don't speak here!"
     msg = message.content.strip()
     if not message.author.bot:
         if database.get_user(message.author.id) is not None:
@@ -79,6 +81,9 @@ async def on_message(message):
             #if text is None:
             #    text = ""
             a = await client.send_message(destination=message.channel, content=text, embed=embed)
+        except discord.HTTPException as e:
+            print(f"HTTP EXception!")
+            logging.exception(e)
         except Exception:
             print(f"Exception!")
             logging.exception(Exception)
@@ -98,5 +103,7 @@ async def on_message(message):
     elif message.content.startswith('!hello'):
         await client.send_message(message.channel, f"{message.channel.name}")
     """
-print(os.environ["CARD_GAME_BOT_TOKEN"])
-client.run(os.environ["CARD_GAME_BOT_TOKEN"])
+try:
+    client.run(os.environ["CARD_GAME_BOT_TOKEN"])
+except KeyboardInterrupt:
+    print("Stopping...")

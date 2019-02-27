@@ -20,8 +20,8 @@ class BuyCommand(Runner):
         if len(self.args) == 1:
             if database.get_user(self.sender.id) is None:
                 return "forgot to do !start"
-            elif self.args[0] not in database.packs.keys():
-                return f"Valid packs include: {str([k for k in database.packs.keys()])}"
+            elif self.args[0] is None or self.args[0].lower() not in database.packs.keys():
+                return f"Valid packs include: {', '.join([k for k in database.packs.keys()])}"
             elif database.get_balance(self.sender) - database.packs[self.args[0]]["cost"] < 0:
                 return "please do not put yourself in debt"
             else:
